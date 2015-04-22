@@ -26,7 +26,7 @@ def Log(message, level=3, source='Scanners.bundle'):
 def Unicodize(s, lang):
 
   # Get the string into UTF-8.
-  s = fixEncoding(s, lang)
+  s = UnicodeHelper.fixEncoding(s, lang)
 
   # Precompose.
   try:
