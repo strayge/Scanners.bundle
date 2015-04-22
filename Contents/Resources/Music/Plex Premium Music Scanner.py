@@ -598,7 +598,7 @@ def merge_hints(query_track, consensus_track, part, do_quick_match):
     track_title = improve_from_tag(track_title, part, 'title')
 
   merged_track = Media.Track(
-    index=int(query_track.index) if (query_track.index is not None and query_track.index.isdigit()) else -1,
+    index=int(query_track.index) if (query_track.index is not None and str(query_track.index).isdigit()) else -1,
     album=toBytes(consensus_track.album),
     artist=toBytes(consensus_track.artist),
     title=toBytes(track_title),

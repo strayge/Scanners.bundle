@@ -23,16 +23,17 @@ def Log(message, level=3, source='Scanners.bundle'):
   res = urlopen('http://127.0.0.1:32400/log?%s' % args)
   
 # Safely return Unicode
-def Unicodize(s):
+def Unicodize(s, lang):
+
+  # Get the string into UTF-8.
+  s = fixEncoding(s, lang)
 
   # Precompose.
   try:
     s = unicodedata.normalize('NFKD', s.decode('utf-8'))
-  except UnicodeError:
-    try:
-      s = unicodedata.normalize('NFKD', s)
-    except:
-      pass
+  except (UnicodeError, UnicodeDecodeError):
+    try: s = unicodedata.normalize('NFKD', s)
+    except: pass
   
   return s
   
@@ -40,7 +41,11 @@ def Unicodize(s):
 def CleanUpString(s):
 
   # Precompose.
-  s = Unicodize(s)
+  try:
+    s = unicodedata.normalize('NFKD', s.decode('utf-8'))
+  except (UnicodeError, UnicodeDecodeError):
+    try: s = unicodedata.normalize('NFKD', s)
+    except: pass
 
   # Ands.
   s = s.replace('&', 'and')
