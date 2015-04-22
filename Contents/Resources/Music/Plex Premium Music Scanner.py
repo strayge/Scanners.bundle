@@ -232,8 +232,9 @@ def run_query_on_discs(discs, result_list, language, fingerprint, mixed, do_quic
     total_tracks += len(tracks)
     match1 += match * len(tracks)
 
-  match1 = match1 / float(total_tracks)
-  Log('Querying all discs generated %d albums and a total match of %d' % (albums1, match1))
+  if total_tracks > 0:
+    match1 = match1 / float(total_tracks)
+    Log('Querying all discs generated %d albums and a total match of %d' % (albums1, match1))
 
   return (match1, albums1, arts1)
 
