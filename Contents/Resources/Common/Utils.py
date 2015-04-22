@@ -29,7 +29,10 @@ def Unicodize(s):
   try:
     s = unicodedata.normalize('NFKD', s.decode('utf-8'))
   except UnicodeError:
-    s = unicodedata.normalize('NFKD', s)
+    try:
+      s = unicodedata.normalize('NFKD', s)
+    except:
+      pass
   
   return s
   
