@@ -9,7 +9,7 @@ from collections import Counter, defaultdict
 import Media
 import AudioFiles
 import mutagen
-from Utils import Log, LevenshteinDistance, LevenshteinRatio, CleanUpString
+from Utils import Log, LevenshteinDistance, LevenshteinRatio, CleanUpString, Unicodize
 from UnicodeHelper import toBytes
 
 DEBUG = True
@@ -128,8 +128,8 @@ def Scan(path, files, media_list, subdirs, language=None, root=None):
       Log('Building query list for quickmatch with artist: %s, album: %s' % (artist, album))
 
       # Determine if the artist and/or album appears in all filenames, since we'll want to strip these out for clean titles.
-      strip_artist = True if len([f for f in files if artist.lower() in os.path.basename(f).decode('utf-8').lower()]) == len(files) else False
-      strip_album = True if len([f for f in files if album.lower() in os.path.basename(f).decode('utf-8').lower()]) == len(files) else False
+      strip_artist = True if len([f for f in files if artist.lower() in Unicodize(os.path.basename(f)).lower()]) == len(files) else False
+      strip_album = True if len([f for f in files if album.lower() in Unicodize(os.path.basename(f)).lower()]) == len(files) else False
 
       for f in files:
         try:
@@ -154,10 +154,10 @@ def Scan(path, files, media_list, subdirs, language=None, root=None):
           title = re.sub(r'^[\W\-]+', '', title).strip()
 
           # Last chance for artist or album prefix.
-          if not strip_artist and title.decode('utf-8').lower().find(artist.lower()) == 0:
+          if not strip_artist and Unicodize(title).lower().find(artist.lower()) == 0:
             title = title[len(artist):]
             
-          if not strip_album and title.decode('utf-8').lower().find(album.lower()) == 0:
+          if not strip_album and Unicodize(title).lower().find(album.lower()) == 0:
             title = title[len(album):]
       
           t = Media.Track(artist=toBytes(artist), album=toBytes(album), title=toBytes(title), index=int(index))

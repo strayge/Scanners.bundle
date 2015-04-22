@@ -22,14 +22,22 @@ def Log(message, level=3, source='Scanners.bundle'):
   args = urlencode({'message' : UnicodeHelper.toBytes(message), 'level' : level, 'source' : source})
   res = urlopen('http://127.0.0.1:32400/log?%s' % args)
   
-# Cleanup string.
-def CleanUpString(s):
+# Safely return Unicode
+def Unicodize(s):
 
   # Precompose.
   try:
     s = unicodedata.normalize('NFKD', s.decode('utf-8'))
   except UnicodeError:
     s = unicodedata.normalize('NFKD', s)
+  
+  return s
+  
+# Cleanup string.
+def CleanUpString(s):
+
+  # Precompose.
+  s = Unicodize(s)
 
   # Ands.
   s = s.replace('&', 'and')
