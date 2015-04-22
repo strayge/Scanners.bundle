@@ -2,6 +2,15 @@ import os, re, string, unicodedata
 from urllib import urlopen, urlencode
 import UnicodeHelper
 
+RE_UNICODE_CONTROL =  u'([\u0000-\u0008\u000b-\u000c\u000e-\u001f\ufffe-\uffff])' + \
+                      u'|' + \
+                      u'([%s-%s][^%s-%s])|([^%s-%s][%s-%s])|([%s-%s]$)|(^[%s-%s])' % \
+                      (
+                        unichr(0xd800),unichr(0xdbff),unichr(0xdc00),unichr(0xdfff),
+                        unichr(0xd800),unichr(0xdbff),unichr(0xdc00),unichr(0xdfff),
+                        unichr(0xd800),unichr(0xdbff),unichr(0xdc00),unichr(0xdfff)
+                      )
+
 # Platform-safe function to split a path into a list of path elements.
 def SplitPath(path, maxdepth=20):
     (head, tail) = os.path.split(path)
@@ -24,6 +33,9 @@ def Log(message, level=3, source='Scanners.bundle'):
   
 # Safely return Unicode
 def Unicodize(s, lang):
+
+  # Strip control characters.
+  s = re.sub(RE_UNICODE_CONTROL, '', s)
 
   # Get the string into UTF-8.
   s = UnicodeHelper.fixEncoding(s, lang)
