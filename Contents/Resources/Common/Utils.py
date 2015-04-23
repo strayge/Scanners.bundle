@@ -1,4 +1,4 @@
-import os, re, string, unicodedata
+import os, re, string, unicodedata, sys
 from urllib import urlopen, urlencode
 import UnicodeHelper
 
@@ -31,22 +31,25 @@ def Log(message, level=3, source='Scanners.bundle'):
   args = urlencode({'message' : UnicodeHelper.toBytes(message), 'level' : level, 'source' : source})
   res = urlopen('http://127.0.0.1:32400/log?%s' % args)
   
-# Safely return Unicode
+# Safely return Unicode.
 def Unicodize(s, lang):
 
-  # Strip control characters.
+  # Precompose.
+  try: s = unicodedata.normalize('NFKD', s.decode('utf-8'))
+  except:
+    try: s = unicodedata.normalize('NFKD', s.decode(sys.getdefaultencoding()))
+    except:
+      try: s = unicodedata.normalize('NFKD', s.decode(sys.getfilesystemencoding()))
+      except:
+        try: s = unicodedata.normalize('NFKD', s.decode('ISO-8859-1'))
+        except:
+          try: s = unicodedata.normalize('NFKD', s)
+          except Exception, e:
+            Log(type(e).__name__ + ' exception precomposing: ' + str(e))
+
+  Strip control characters.
   s = re.sub(RE_UNICODE_CONTROL, '', s)
 
-  # Get the string into UTF-8.
-  s = UnicodeHelper.fixEncoding(s, lang)
-
-  # Precompose.
-  try:
-    s = unicodedata.normalize('NFKD', s.decode('utf-8'))
-  except (UnicodeError, UnicodeDecodeError):
-    try: s = unicodedata.normalize('NFKD', s)
-    except: pass
-  
   return s
   
 # Cleanup string.
