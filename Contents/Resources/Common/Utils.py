@@ -47,7 +47,7 @@ def Unicodize(s, lang):
           except Exception, e:
             Log(type(e).__name__ + ' exception precomposing: ' + str(e))
 
-  Strip control characters.
+  # Strip control characters.
   s = re.sub(RE_UNICODE_CONTROL, '', s)
 
   return s
