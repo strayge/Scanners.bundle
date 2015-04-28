@@ -28,6 +28,11 @@ def ContainsFile(files, file):
 
 # Log to PMS log.
 def Log(message, level=3, source='Scanners.bundle'):
+  try: message = unicode(message, errors='replace').encode('utf-8', errors='replace')
+  except Exception, decode_ex:
+    try: message = message.encode('utf-8', errors='replace')
+    except Exception, encode_ex:
+      message = 'Log message suppressed due to exceptions: %s, %s' % (decode_ex, encode_ex)
   args = urlencode({'message' : UnicodeHelper.toBytes(message), 'level' : level, 'source' : source})
   res = urlopen('http://127.0.0.1:32400/log?%s' % args)
   

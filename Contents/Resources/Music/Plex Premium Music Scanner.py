@@ -575,7 +575,7 @@ def lookup(query_list, result_list, language=None, fingerprint=False, mixed=Fals
   # If we had a high percentage of track mismatches and a bad album Lev ratio, bail.
   album_lev_ratio = LevenshteinRatio(consensus_track.album, query_list[0].album)
   if track_mismatch_percentage > 50 and album_lev_ratio < .9:
-    Log('%d%% of tracks were mismatched and album also looked like a bad match (%s vs. %s, lev ratio %f), won\'t use this result.' % (track_mismatch_percentage, consensus_track.album, query_list[0].album, album_lev_ratio))
+    Log('%d%% of tracks were mismatched and album also looked like a bad match (%s vs. %s, lev ratio %f), won\'t use this result.' % (track_mismatch_percentage, toBytes(consensus_track.album), toBytes(query_list[0].album), album_lev_ratio))
     return (0, 0, 0)
 
   # Some EPs get matches as the "parent" album. Symptoms include reordered tracks, and generally less tracks.
