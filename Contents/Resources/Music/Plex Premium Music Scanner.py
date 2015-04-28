@@ -434,7 +434,7 @@ def lookup(query_list, result_list, language=None, fingerprint=False, mixed=Fals
       if str(i) in matched_tracks:
         track = matched_tracks[str(i)]
         if query_track.artist and not track.getAttribute('originalTitle'):
-          Log('Restoring track artist %s from tags for track %d - %s' % (query_track.artist, query_track.index, query_track.name))
+          Log('Restoring track artist %s from tags for track %s - %s' % (query_track.artist, query_track.index, query_track.name))
           track.setAttribute('originalTitle', query_track.artist)
 
   # Add Gracenote results to the result_list where we have them.
