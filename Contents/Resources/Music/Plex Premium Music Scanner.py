@@ -220,7 +220,8 @@ def run_queries(discs, result_list, language, fingerprint, mixed, do_quick_match
     
     if match2 > match1 or (match2 == match1 and (albums2 < albums1 or arts2 > arts1)):
       Log('This way gave a better match, keeping.')
-      result_list[:] = other_result_list
+      del result_list[:]
+      result_list = other_result_list
       final_match = match2
       
   return final_match
