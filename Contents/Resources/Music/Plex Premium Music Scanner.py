@@ -220,8 +220,7 @@ def run_queries(discs, result_list, language, fingerprint, mixed, do_quick_match
     
     if match2 > match1 or (match2 == match1 and (albums2 < albums1 or arts2 > arts1)):
       Log('This way gave a better match, keeping.')
-      del result_list[:]
-      result_list = other_result_list
+      result_list[:] = other_result_list
       final_match = match2
       
   return final_match
@@ -603,10 +602,8 @@ def merge_hints(query_track, consensus_track, part, do_quick_match):
     track_title = improve_from_tag(track_title, part, 'title')
 
   # We don't want to use consensus disc numbers, since tags are more reliable. It's common for bonus discs, etc. to get "split".
-  try:
-    disc = int(improve_from_tag('1', part, 'discnumber').split('/')[0].split('of')[0].strip())
-  except:
-    disc = 1
+  try: disc = int(improve_from_tag('1', part, 'discnumber').split('/')[0].split('of')[0].strip())
+  except: disc = 1
 
   merged_track = Media.Track(
     index=int(query_track.index) if (query_track.index is not None and str(query_track.index).isdigit()) else -1,
