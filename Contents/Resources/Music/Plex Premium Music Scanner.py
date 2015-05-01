@@ -304,7 +304,6 @@ def lookup(query_list, result_list, language=None, fingerprint=False, mixed=Fals
 
   # See if input looks like a sane album
   (sane_input_tracks, unique_input_albums, input_discs) = compute_input_sanity(query_list)
-  Log('Input sanity checking found contiguous and unique: %s, unique albums: %s, discs: %s' % (sane_input_tracks, unique_input_albums, input_discs))
 
   # Build up the query with the contents of the query list.
   args = ''
@@ -481,9 +480,7 @@ def lookup(query_list, result_list, language=None, fingerprint=False, mixed=Fals
         # If we had sane input, but some tracks got put into a different album, don't allow that.
         if sane_input_tracks and track.getAttribute('parentGUID') != consensus_track.album_guid:
           Log('Had sane input but track %s got split, using merged hints.' % track.getAttribute('index'))
-          t = merge_hints(query_track, consensus_track, parts[i], do_quick_match)
-          Log('Adding merged track: %s / %s / disc %0s track %02d - %s' % (t.artist, t.album, t.disc, t.index, t.name))
-          result_list.append(t)
+          result_list.append(merge_hints(query_track, consensus_track, parts[i], do_quick_match))
           perfect_matches += 0.75
           continue
 
@@ -641,9 +638,6 @@ def compute_track_lev_ratio(query_track, matched_track):
 def improve_from_tag(existing, file, tag):
   tags = mutagen.File(file, easy=True)
   if tags and tag in tags:
-    new_value = tags[tag][0]
-    if existing != new_value:
-      Log('Improving from tag %s: %s -> %s' % (tag, existing, new_value))
-    existing = new_value
+    existing = tags[tag][0]
     
   return toBytes(existing)
