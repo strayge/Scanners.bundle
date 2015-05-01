@@ -561,7 +561,7 @@ def lookup(query_list, result_list, language=None, fingerprint=False, mixed=Fals
     m = RE_MULTIDISC.search(t.album)
     if m and int(m.group(1)) > 1 and str(t.disc) == '1':
       t.disc = m.group(1)
-      t.album = t.album[:m.start()].strip()
+    t.album = RE_MULTIDISC.sub('', t.album)
 
   # Multi-disc album titles have cruft in them. Compute a penalty for multiple album titles after trimming it out.
   album_title_penalty = len(set([RE_MULTIDISC.sub('', t.album).strip() for t in result_list]))
