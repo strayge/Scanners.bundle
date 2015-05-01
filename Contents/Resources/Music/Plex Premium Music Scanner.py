@@ -556,17 +556,14 @@ def lookup(query_list, result_list, language=None, fingerprint=False, mixed=Fals
     Log('The majority of tracks were unmatched, letting them be.')
     result_list.extend([tup[0] for tup in tracks_without_matches])
     
-  # Last, but not least, let's clean up the results. Multi-disc album titles have cruft in them.
-  # Also, if we find a disc, make sure it matches what we're setting, since some albums are
-  # returned named correctly but claiming to be disc 1.
-  #
+  # Gracenote often returns albums with [disc 2] etc. in the title, but tracks with disc=1. Use the album title disc number in these cases.
   for t in result_list:
     m = RE_MULTIDISC.search(t.album)
-    if m:
-      t.disc = int(m.group(1))
+    if m and int(m.group(1)) > 1 and str(t.disc) == '1':
+      t.disc = m.group(1)
       t.album = t.album[:m.start()].strip()
 
-  # Compute a penalty for multiple album titles after trimming out multi-disc cruft.
+  # Multi-disc album titles have cruft in them. Compute a penalty for multiple album titles after trimming it out.
   album_title_penalty = len(set([RE_MULTIDISC.sub('', t.album).strip() for t in result_list]))
 
   # Compute a score.
@@ -602,8 +599,8 @@ def merge_hints(query_track, consensus_track, part, do_quick_match):
     track_title = improve_from_tag(track_title, part, 'title')
 
   # We don't want to use consensus disc numbers, since tags are more reliable. It's common for bonus discs, etc. to get "split".
-  try: disc = int(improve_from_tag('1', part, 'discnumber').split('/')[0].split('of')[0].strip())
-  except: disc = 1
+  try: disc = improve_from_tag('1', part, 'discnumber').split('/')[0].split('of')[0].strip()
+  except: disc = '1'
 
   merged_track = Media.Track(
     index=int(query_track.index) if (query_track.index is not None and str(query_track.index).isdigit()) else -1,
