@@ -16,7 +16,7 @@ DEBUG = True
 RE_MULTIDISC = re.compile(r'[ \-:]+(?:\[disc|cd) ?([\d+]).*', flags=re.IGNORECASE)
 RE_ADDENDUM = re.compile(' ([(\[].+[)\]])$')
 
-def Scan(path, files, media_list, subdirs, language=None, root=None):
+def Scan(path, files, media_list, subdirs, language=None, root=None, respect_tags=False):
 
   # Scan for audio files.
   AudioFiles.Scan(path, files, media_list, subdirs, root)
@@ -197,6 +197,7 @@ def Scan(path, files, media_list, subdirs, language=None, root=None):
       result_list = []
 
     # Finalize the results.
+    used_tags = False
     del media_list[:]
     if len(result_list) > 0:
       # Gracenote results.
@@ -204,7 +205,31 @@ def Scan(path, files, media_list, subdirs, language=None, root=None):
         media_list.append(result)
     else:
       # We bailed during the GN lookup, fall back to tags.
+      used_tags = True
       AudioFiles.Process(path, files, media_list, subdirs, root)
+
+    # If we wanted to respect tags, then make sure we used tags.
+    if not used_tags and respect_tags:
+
+      # Let's grab tag results, and then set GUIDs we found.
+      tag_media_list = []
+      AudioFiles.Process(path, files, tag_media_list, subdirs, root)
+      
+      # Now suck GN data out.
+      path_map = {}
+      for track in media_list:
+        path_map[track.parts[0]] = track
+        
+      for track in tag_media_list:
+        gn_track = path_map[track.parts[0]]
+        if gn_track:
+          track.guid = gn_track.guid
+          track.album_guid = gn_track.album_guid
+          track.artist_guid = gn_track.artist_guid
+          track.album_thumb_url = gn_track.album_thumb_url
+          track.artist_thumb_url = gn_track.artist_thumb_url
+      
+      media_list[:] = tag_media_list
 
 def run_queries(discs, result_list, language, fingerprint, mixed, do_quick_match):
 
