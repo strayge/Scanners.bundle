@@ -202,7 +202,7 @@ def mutagenGrabber(tag, tagName, language):
   return t
 
 def cleanTrackAndDisk(inVal):
-  return inVal.split('/')[0].split('of')[0].strip()
+  return str(inVal).split('/')[0].split('of')[0].strip()
 
 def getWMAstring(WMAtag):
   if str(type(WMAtag)).count('ASF') > 0:
