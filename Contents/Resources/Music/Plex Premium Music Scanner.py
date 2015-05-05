@@ -638,9 +638,6 @@ def merge_hints(query_track, consensus_track, part, do_quick_match):
 
   merged_track.parts.append(part)
 
-  #if DEBUG:
-  #  merged_track.name = toBytes(merged_track.name + ' [MERGED GN MISS]')
-
   return merged_track
   
 def compute_track_lev_ratio(query_track, matched_track):
