@@ -41,6 +41,11 @@ def Process(path, files, mediaList, subdirs, language=None, root=None):
       artist = None
       parsed_title = False
       (artist, album, title, track, disc, album_artist, compil) = getInfoFromTag(f, language)
+      
+      # Presense of an album artist is a key thing, so if it's empty, treat it like it doesn't exist.
+      if album_artist is not None and len(album_artist) == 0:
+        album_artist = None
+      
       #print 'artist: ', artist, ' | album_artist: ', album_artist, ' | album: ', album, ' | disc: ', str(disc), ' | title: ', title, ' | compilation: ' + str(compil)
       if album_artist and album_artist.lower() in various_artists: #(compil == '1' and (album_artist is None or len(album_artist.strip()) == 0)) or (
         album_artist = 'Various Artists'
