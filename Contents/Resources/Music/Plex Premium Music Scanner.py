@@ -13,7 +13,7 @@ from Utils import Log, LevenshteinDistance, LevenshteinRatio, CleanUpString, Uni
 from UnicodeHelper import toBytes
 
 DEBUG = True
-RE_MULTIDISC = re.compile(r'[ \-:]+(?:\[disc|cd) ?([\d+]).*', flags=re.IGNORECASE)
+RE_MULTIDISC = re.compile(r'[ \-:]+(?:\[disc|cd) ?([\d]+).*', flags=re.IGNORECASE)
 RE_ADDENDUM = re.compile(' ([(\[].+[)\]])$')
 
 def Scan(path, files, media_list, subdirs, language=None, root=None, respect_tags=False):
