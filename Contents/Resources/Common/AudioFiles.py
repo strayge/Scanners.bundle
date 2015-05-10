@@ -63,6 +63,9 @@ def Process(path, files, mediaList, subdirs, language=None, root=None):
         m = re.match("^([0-9]{1,3})([^0-9].*)$", file) or re.match(".*[ \-\.]+([0-9]{2})[ \-\.]+([^0-9].*)$", file) or re.match("^[a-f]([0-9]{2})[ \-\.]+([^0-9].*)$", file)
         if m:
           track, new_title = int(m.group(1)), m.group(2)
+          if track > 100 and track % 100 < 50:
+            disc = track / 100
+            track = track % 100
           
           # If we don't have a title, steal it from the filename.
           if title == None or parsed_title == True:
