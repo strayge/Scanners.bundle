@@ -228,6 +228,13 @@ def Scan(path, files, media_list, subdirs, language=None, root=None, respect_tag
           track.artist_guid = gn_track.artist_guid
           track.album_thumb_url = gn_track.album_thumb_url
           track.artist_thumb_url = gn_track.artist_thumb_url
+          
+          # If the tags failed, fill in key data from Gracenote.
+          if track.album == '[Unknown Album]':
+            track.album = gn_track.album
+          
+          if track.artist == '[Unknown Artist]':
+            track.artist = gn_track.artist
       
       media_list[:] = tag_media_list
 
