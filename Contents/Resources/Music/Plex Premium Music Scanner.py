@@ -221,8 +221,8 @@ def Scan(path, files, media_list, subdirs, language=None, root=None, respect_tag
         path_map[track.parts[0]] = track
         
       for track in tag_media_list:
-        gn_track = path_map[track.parts[0]]
-        if gn_track:
+        if track.parts[0] in path_map:
+          gn_track = path_map[track.parts[0]]
           track.guid = gn_track.guid
           track.album_guid = gn_track.album_guid
           track.artist_guid = gn_track.artist_guid
