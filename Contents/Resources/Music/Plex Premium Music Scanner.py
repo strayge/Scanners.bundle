@@ -570,7 +570,7 @@ def lookup(query_list, result_list, language=None, fingerprint=False, mixed=Fals
       Log('Didn\'t get a track match for %s at path: %s' % ((query_track.title or query_track.name), query_track.parts[0]))
 
       if unique_albums == 1 and unique_artists == 1:
-        Log('Other positive Gracenote matches were all from the same artist and album (%s, %s); merging with Gracenote hints.' % (consensus_track.artist, consensus_track.album))
+        Log('Other positive Gracenote matches were all from the same artist and album (%s, %s); merging with Gracenote hints.' % (toBytes(consensus_track.artist), toBytes(consensus_track.album)))
         result_list.append(merge_hints(query_track, consensus_track, parts[i], do_quick_match))
       else:
         Log('No matches, just appending query track')
