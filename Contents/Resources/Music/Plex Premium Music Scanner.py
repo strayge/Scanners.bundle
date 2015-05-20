@@ -169,7 +169,7 @@ def Scan(path, files, media_list, subdirs, language=None, root=None, respect_tag
         except Exception as e:
           Log('Error preparing tracks for quick matching: ' + str(e))
 
-    # Otherwise, let's do old school directory crawling and tag reading for now (WiP).
+    # Otherwise, let's do old school directory crawling and tag reading.
     else:
       AudioFiles.Process(path, files, media_list, subdirs, root)
       query_list = list(media_list)
