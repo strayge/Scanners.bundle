@@ -284,7 +284,7 @@ def getInfoFromTag(filename, language):
   title = mutagenGrabber(tag, 'title', language)
   track = cleanTrackAndDisk(mutagenGrabber(tag, 'tracknumber', language))
   disc = cleanTrackAndDisk(mutagenGrabber(tag, 'discnumber', language))
-  TPE2 = mutagenGrabber(tag, 'albumartist', language)
+  TPE2 = mutagenGrabber(tag, 'albumartist', language) or mutagenGrabber(tag, 'album artist', language)
   try:
     compil = tag['compilation'][0]
     if tag['compilation'][0] == True: compil = '1'
