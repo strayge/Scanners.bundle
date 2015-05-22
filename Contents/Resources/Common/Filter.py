@@ -5,9 +5,9 @@ IGNORE_DIRS = ['@eaDir', '.*_UNPACK_.*', '.*_FAILED_.*', '\..*', 'lost\+found', 
 ROOT_IGNORE_DIRS = ['\$Recycle.Bin', 'System Volume Information', 'Temporary Items', 'Network Trash Folder']
 
 # Parse a .plexignore file, append patterns to the plexignore lists.
-def ParsePlexIgnore(file, plexignore_files, plexignore_dirs):
+def ParsePlexIgnore(filename, plexignore_files, plexignore_dirs):
   try:
-    f = open(file,'r')
+    f = open(filename,'r')
     for pattern in f:
       pattern = pattern.strip()
       if pattern != '' and pattern[0] != '#':
@@ -18,7 +18,7 @@ def ParsePlexIgnore(file, plexignore_files, plexignore_dirs):
           # Match directories using glob.  Leading slashes screw things up;
           # these should always be relative to the .plexignore file.
           if pattern.strip()[0] != '/':
-            plexignore_dirs.append(os.path.join(os.path.dirname(file),pattern))
+            plexignore_dirs.append(os.path.join(os.path.dirname(filename),pattern))
     f.close()
   except:
     return
@@ -41,47 +41,47 @@ def Scan(path, files, mediaList, subdirs, exts, root=None):
     if Utils.ContainsFile(os.listdir(root), '.plexignore'):
       ParsePlexIgnore(os.path.join(root,'.plexignore'), plexignore_files, plexignore_dirs)
 
-  for i in files:
+  for f in files:
     # Only use unicode if it's supported, which it is on Windows and OS X,
     # but not Linux. This allows things to work with non-ASCII characters
     # without having to go through a bunch of work to ensure the Linux 
     # filesystem is UTF-8 "clean".
     #
     if use_unicode:
-      try: filename = unicode(i.decode('utf-8'))
-      except: files_to_whack.append(i)
+      try: filename = unicode(f.decode('utf-8'))
+      except: files_to_whack.append(f)
     else:
-      filename = i
+      filename = f
       
-    (file, ext) = os.path.splitext(i)
-    file = os.path.basename(file)
+    (basename, ext) = os.path.splitext(f)
+    basename = os.path.basename(basename)
     
     # If extension is wrong, don't include.
     if not ext.lower()[1:] in exts:
-      files_to_whack.append(i)
+      files_to_whack.append(f)
     
     # Broken symlinks and zero byte files need not apply.
     if os.path.exists(filename) == False or os.path.getsize(filename) == 0:
-      files_to_whack.append(i)
+      files_to_whack.append(f)
 
     # Remove unreadable files.
     if not os.access(filename, os.R_OK):
       # If access() claims the file is unreadable, try to read a byte just to be sure.
       try:
-        f = open(file,'rb')
-        f.read(1)
-        f.close()
+        read_file = open(filename,'rb')
+        read_file.read(1)
+        read_file.close()
       except:
-        files_to_whack.append(i)
+        files_to_whack.append(f)
       
     # Remove hidden files.
-    if len(file) == 0 or file[0] == '.':
-      files_to_whack.append(i)
+    if len(basename) == 0 or basename[0] == '.':
+      files_to_whack.append(f)
 
     # Remove .plexignore file regex matches.
     for rx in plexignore_files:
-      if re.match(rx, os.path.basename(i), re.IGNORECASE):
-        files_to_whack.append(i)
+      if re.match(rx, os.path.basename(f), re.IGNORECASE):
+        files_to_whack.append(f)
 
   # See what directories to ignore.
   ignore_dirs_total = IGNORE_DIRS
@@ -107,12 +107,12 @@ def Scan(path, files, mediaList, subdirs, exts, root=None):
 
   # Whack files.
   files_to_whack = list(set(files_to_whack))
-  for i in files_to_whack:
-    if i in files:
-      files.remove(i)
+  for f in files_to_whack:
+    if f in files:
+      files.remove(f)
 
   # Remove the directories.
   dirs_to_whack = list(set(dirs_to_whack))
-  for i in dirs_to_whack:
-    if i in subdirs:
-      subdirs.remove(i)
+  for f in dirs_to_whack:
+    if f in subdirs:
+      subdirs.remove(f)
