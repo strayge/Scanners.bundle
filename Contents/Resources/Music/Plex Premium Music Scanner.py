@@ -108,7 +108,7 @@ def Scan(path, files, media_list, subdirs, language=None, root=None, respect_tag
             break
 
           if album and album != this_album:
-            Log('Found different albums in tags (%s vs. %s); doing expensive matching.' % (artist, this_artist))
+            Log('Found different albums in tags (%s vs. %s); doing expensive matching.' % (album, this_album))
             do_quick_match = False
             break
 
