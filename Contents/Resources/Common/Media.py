@@ -26,6 +26,19 @@ class Movie(MediaRoot):
     else:
       return "%s" % (self.name)
 
+class Video(MediaRoot):
+  def __init__(self, name, year=None):
+    MediaRoot.__init__(self,'Clip')
+    self.name = name
+    self.year = year
+    self.guid = None
+    
+  def __repr__(self):
+    if self.year is not None:
+      return "%s (%s)" % (self.name, self.year)
+    else:
+      return "%s" % (self.name)
+
 class Episode(MediaRoot):
   def __init__(self, show, season, episode, title=None, year=None):
     MediaRoot.__init__(self, 'Episode')

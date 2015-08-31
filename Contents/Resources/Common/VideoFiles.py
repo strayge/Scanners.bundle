@@ -1,5 +1,5 @@
 #!/usr/bin/python2.4
-import Filter
+import Filter, UnicodeHelper
 import os.path, re, datetime, titlecase, unicodedata, sys
 
 video_exts = ['3g2', '3gp', 'asf', 'asx', 'avc', 'avi', 'avs', 'bivx', 'bup', 'divx', 'dv', 'dvr-ms', 'evo', 'fli', 'flv',
@@ -33,16 +33,7 @@ yearRx = '([\(\[\.\-])([1-2][0-9]{3})([\.\-\)\]_,+])'
 def CleanName(name):
   
   orig = name
-
-  # Make sure we pre-compose.  Try to decode with reported filesystem encoding, then with UTF-8 since some filesystems lie.
-  try:
-    name = unicodedata.normalize('NFKC', name.decode(sys.getfilesystemencoding()))
-  except:
-    try:
-      name = unicodedata.normalize('NFKC', name.decode('utf-8'))
-    except:
-      pass
-
+  name = UnicodeHelper.filenameToString(name)
   name = name.lower()
 
   # grab the year, if there is one. set ourselves up to ignore everything after the year later on.

@@ -22,3 +22,17 @@ def toBytes(s):
   try: s = unicode(s).encode('utf-8')
   except: pass
   return s
+  
+def filenameToString(s):
+  # Make sure we pre-compose.  Try to decode with reported filesystem encoding, then with UTF-8 since 
+  # some filesystems lie.
+  #
+  try:
+    s = unicodedata.normalize('NFKC', name.decode(sys.getfilesystemencoding()))
+  except:
+    try:
+      s = unicodedata.normalize('NFKC', name.decode('utf-8'))
+    except:
+      pass
+
+  return s
