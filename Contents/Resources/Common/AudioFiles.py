@@ -189,25 +189,28 @@ def mp3tagGrabber(tag, filename, tagName, language, tagNameAlt=None, force=False
   return t
 
 def mutagenGrabber(tag, tagName, language):
+  tags = []
+  returnTag = None
   try:
-    t = tag[tagName][0]
-    if language in langDecodeMap.iterkeys():
-      for d in langDecodeMap[language]:
-        try:
-          t = t.decode(d).encode('utf-8')
-          break
-        except:
+    for t in tag[tagName]:
+      if language in langDecodeMap.iterkeys():
+        for d in langDecodeMap[language]:
           try:
-            t = t.encode('iso8859-1').decode(d)
+            t = t.decode(d).encode('utf-8')
             break
           except:
-            t = t.encode('utf-8').decode('utf-8')
-    else:
-      try: t = t.encode('utf-8').decode('utf-8')
-      except: pass      
-  except:
-    t = None
-  return t
+            try:
+              t = t.encode('iso8859-1').decode(d)
+              break
+            except:
+              t = t.encode('utf-8').decode('utf-8')
+      else:
+        try: t = t.encode('utf-8').decode('utf-8')
+        except: pass
+      tags.append(t)
+    returnTag = '/'.join(tags)
+  except: pass
+  return returnTag
 
 def cleanTrackAndDisk(inVal):
   try:
