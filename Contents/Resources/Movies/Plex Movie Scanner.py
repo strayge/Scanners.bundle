@@ -95,7 +95,7 @@ def Scan(path, files, mediaList, subdirs, language=None, root=None, **kwargs):
     Stack.Scan(path, files, mediaList, subdirs)
 
     # Clean the folder name and try a match on the folder.
-    if len(path) > 0 and 'Plex Versions' not in path:
+    if len(path) > 0:
       folderName = os.path.basename(path).replace(' ', ' ').replace(' ','.')
       (cleanName, year) = VideoFiles.CleanName(folderName)
       if len(mediaList) == 1 and re.match(nice_match, cleanName):
