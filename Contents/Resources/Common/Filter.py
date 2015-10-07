@@ -2,7 +2,7 @@ import os, re, fnmatch, glob
 import Utils
 
 IGNORE_DIRS = ['@eaDir', '.*_UNPACK_.*', '.*_FAILED_.*', '\..*', 'lost\+found', '.AppleDouble', '.*\.itlp$']
-ROOT_IGNORE_DIRS = ['\$Recycle.Bin', 'System Volume Information', 'Temporary Items', 'Network Trash Folder', 'Plex Versions']
+ROOT_IGNORE_DIRS = ['\$Recycle.Bin', 'System Volume Information', 'Temporary Items', 'Network Trash Folder']
 
 # Parse a .plexignore file, append patterns to the plexignore lists.
 def ParsePlexIgnore(filename, plexignore_files, plexignore_dirs):
