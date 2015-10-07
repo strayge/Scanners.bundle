@@ -80,6 +80,11 @@ def Scan(path, files, mediaList, subdirs, language=None, root=None):
   elif len(paths) > 0 and len(paths[0]) > 0:
     done = False
         
+    # If we're inside a Plex Versions directory, remove it and the quality directory from consideration.
+    if 'Plex Versions' in paths:
+      versions_index = paths.index('Plex Versions')
+      del paths[versions_index:versions_index + 2]
+
     # See if parent directory is a perfect match (e.g. a directory like "24 - 8x02 - Day 8_ 5_00P.M. - 6_00P.M")
     if len(files) == 1:
       for rx in standalone_episode_regexs:
