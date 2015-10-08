@@ -81,7 +81,7 @@ def Scan(path, files, mediaList, subdirs, language=None, root=None):
     done = False
         
     # If we're inside a Plex Versions directory, remove it and the quality directory from consideration.
-    if 'Plex Versions' in paths:
+    if 'Plex Versions' in paths and len(paths) > 2:
       versions_index = paths.index('Plex Versions')
       del paths[versions_index:versions_index + 2]
 
