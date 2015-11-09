@@ -35,6 +35,7 @@ def Log(message, level=3, source='Scanners.bundle'):
       message = 'Log message suppressed due to exceptions: %s, %s' % (decode_ex, encode_ex)
   args = urlencode({'message' : UnicodeHelper.toBytes(message), 'level' : level, 'source' : source})
   res = urlopen('http://127.0.0.1:32400/log?%s' % args)
+  res.close()
   
 # Safely return Unicode.
 def Unicodize(s, lang):
