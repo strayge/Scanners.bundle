@@ -5,7 +5,7 @@ IGNORE_DIRS = ['@eaDir', '.*_UNPACK_.*', '.*_FAILED_.*', '\..*', 'lost\+found', 
 ROOT_IGNORE_DIRS = ['\$Recycle.Bin', 'System Volume Information', 'Temporary Items', 'Network Trash Folder']
 
 # Parse a .plexignore file, append patterns to the plexignore lists.
-def ParsePlexIgnore(filename, plexignore_files, plexignore_dirs):
+def ParsePlexIgnore(filename, plexignore_files, plexignore_dirs, cwd=None):
   try:
     f = open(filename,'r')
     for pattern in f:
@@ -18,7 +18,8 @@ def ParsePlexIgnore(filename, plexignore_files, plexignore_dirs):
           # Match directories using glob.  Leading slashes screw things up;
           # these should always be relative to the .plexignore file.
           if pattern.strip()[0] != '/':
-            plexignore_dirs.append(os.path.join(os.path.dirname(filename),pattern))
+            dir_root = os.path.dirname(cwd) if cwd else os.path.dirname(filename)
+            plexignore_dirs.append(os.path.join(dir_root, pattern))
     f.close()
   except:
     return
@@ -37,9 +38,9 @@ def Scan(path, files, mediaList, subdirs, exts, root=None):
     ParsePlexIgnore(os.path.join(root,path,'.plexignore'), plexignore_files, plexignore_dirs)
 
   # Also look for a .plexignore in the 'root' for this source.
-  if root and files and root != os.path.dirname(files[0]):
+  if root and (not files or (files and root != os.path.dirname(files[0]))):
     if Utils.ContainsFile(os.listdir(root), '.plexignore'):
-      ParsePlexIgnore(os.path.join(root,'.plexignore'), plexignore_files, plexignore_dirs)
+      ParsePlexIgnore(os.path.join(root,'.plexignore'), plexignore_files, plexignore_dirs, os.path.join(root, path))
 
   for f in files:
     # Only use unicode if it's supported, which it is on Windows and OS X,
