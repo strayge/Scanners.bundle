@@ -101,7 +101,7 @@ def Scan(path, files, mediaList, subdirs, exts, root=None):
   # Add glob matches from .plexignore before whacking.
   for pattern in plexignore_dirs:
     for match in glob.glob(pattern):
-      if os.path.isdir(match):
+      if os.path.isdir(match.decode("utf-8")):
         dirs_to_whack.append(os.path.dirname(match))
       else:
         files_to_whack.append(match)
